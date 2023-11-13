@@ -3,8 +3,8 @@ const mysql = require('mysql2');
 
 const env = process.env;
 
-class SQL{
-    constructor(){
+class SQL {
+    constructor() {
         this.conn = mysql.createPool({
             host: env.mysql_host || 'localhost',
             user: env.mysql_user || 'root',
@@ -12,8 +12,14 @@ class SQL{
             database: env.mysql_database || 'dev',
         });
     }
+
 }
 
-const mysql_client = new SQL();
+const client = new SQL();
 
-module.exports = mysql_client;
+client.conn.getConnection((err) => {
+    if (err){console.log("Error connect to DB: ", err);}
+})
+
+
+module.exports = { client }
