@@ -4,6 +4,7 @@ const path = require('path');
 const useBodyParser = require('./tools/body-parser');
 const sql_migrate = require('./models/mysql/migrate');
 const { generate_token } = require('./service/token');
+const { mockup } = require('./models/mysql/position');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -35,5 +36,6 @@ app.get('/token', (req, res) => {
 
 app.listen(PORT, HOST, () => {
     sql_migrate();
+    mockup();
     console.log(`Server started at http://${HOST}:${PORT}`);
 });
