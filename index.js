@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const useBodyParser = require('./tools/body-parser');
 const sql_migrate = require('./models/mysql/migrate');
+const { generate_token } = require('./service/token');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -17,11 +18,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 useBodyParser(app);
 
-app.get('/', (req,res)=>{
+app.get('/', (req, res) => {
     res.render('main');
 })
 
-app.listen(PORT, HOST, () =>{
+app.get('/token', (req, res) => {
+    let answer = { success: true }
+    try {
+        answer.token = generate_token();
+    } catch (err) {
+        console.log("Error generating token: ", err);
+        answer.success = false;
+    }
+    res.json(answer);
+});
+
+app.listen(PORT, HOST, () => {
     sql_migrate();
     console.log(`Server started at http://${HOST}:${PORT}`);
 });
