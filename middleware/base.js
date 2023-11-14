@@ -1,3 +1,4 @@
+const { get_token } = require("../models/mysql/token");
 const ResponseBase = require("../models/web/response");
 const errors = require("../service/errors");
 const { validate_token } = require("../service/token");
@@ -30,7 +31,20 @@ function token_required(req, res, next) {
         res.statusCode = 401;
         return res.json(res.locals.body);
     }
-    next();
+    get_token(req.headers.token)
+    .then(result=>{
+        if (result==0) {
+            res.locals.body.add_message(errors.TokenMailformed)
+            res.statusCode = 401;
+            res.json(res.locals.body);
+            return
+        }
+        next();
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+
 }
 
 /**

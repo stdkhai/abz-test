@@ -4,12 +4,12 @@ const { column } = require('./tables');
 
 
 class User{
-    constructor(name, email, phone, position_id, photo){
+    constructor(name, email, phone, position_id, photo_id){
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.position_id = position_id
-        this.photo = photo;
+        this.photo = `/images/${photo_id}.jpg`;
         this.registration_timestamp = new Date().toISOString();
     }
 }

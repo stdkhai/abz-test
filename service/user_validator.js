@@ -61,7 +61,7 @@ async function position_validation(position_id){
     }
     let positions = await get_positions().catch(err=>{console.log(err);});
     switch (true) {
-        case typeof position_id !== 'number':
+        case isNaN(Number(position_id)):
             return Promise.reject(errors.MustBeNumber)
         case !positions.find(pos=>pos.id==position_id):
             return Promise.reject(errors.PositionsNotFound)
@@ -77,13 +77,13 @@ async function photo_validation(photo){
     if (photo.length > 5*1024*1024) {
         return Promise.reject(errors.FileSoBig);
     }
-    const dimensions = sizeOf(photo);  
+    const dimensions = sizeOf.imageSize(photo);  
     if (!aviableFormats.includes(dimensions.type)) {
         return Promise.reject(errors.InvalidFile);
     }
-    if (dimensions.height > 70 || dimensions.width > 70) {
+    /* if (dimensions.height > 70 || dimensions.width > 70) {
         return Promise.reject(errors.ImageTooLarge(70));
-    }
+    } */
     return Promise.resolve(true);
 }
 

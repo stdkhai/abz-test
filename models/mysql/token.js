@@ -30,7 +30,7 @@ async function save_token(token) {
  * @returns 
  */
 async function get_token(token) {
-    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
+    let res = await client.conn.promise().query(`SELECT COUNT(${columns[0].name}) FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
     return res[0][0];
 }
 

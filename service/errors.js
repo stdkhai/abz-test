@@ -2,6 +2,7 @@ class ErrorBase extends Error {
     // middlware errors
     TokenRequired = 'The token required to this request.';
     TokenExpired = 'The token expired.';
+    TokenMailformed = 'The token was malformed.';
     ValidationFailed = 'Validation failed.';
 
     UserIdNotInteger = 'The user_id must be an integer.';
