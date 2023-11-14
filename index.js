@@ -4,7 +4,9 @@ const path = require('path');
 const useBodyParser = require('./tools/body-parser');
 const sql_migrate = require('./models/mysql/migrate');
 const { generate_token } = require('./service/token');
-const { mockup } = require('./models/mysql/position');
+const usersRouter = require('./routes/user-router');
+const Response = require('./models/web/response');
+const mid = require('./middleware/base');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -19,23 +21,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 useBodyParser(app);
 
+//
+// routers
+//
+app.use('/users',usersRouter)
+
 app.get('/', (req, res) => {
     res.render('main');
 })
 
-app.get('/token', (req, res) => {
-    let answer = { success: true }
+app.get('/token', mid.response_base, (req, res) => {
     try {
-        answer.token = generate_token();
+        res.locals.body.add_result('token', generate_token())
     } catch (err) {
-        console.log("Error generating token: ", err);
-        answer.success = false;
+        res.locals.body.add_message(err)
     }
-    res.json(answer);
+    res.json(res.locals.body);
 });
 
 app.listen(PORT, HOST, () => {
     sql_migrate();
-    mockup();
+   // mockup();
     console.log(`Server started at http://${HOST}:${PORT}`);
 });

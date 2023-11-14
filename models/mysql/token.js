@@ -29,7 +29,7 @@ async function save_token(token) {
  */
 async function get_token(token) {
     let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM api_tokens WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
-   return res[0][0];
+    return res[0][0];
 }
 
 module.exports = {

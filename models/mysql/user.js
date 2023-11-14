@@ -1,3 +1,4 @@
+const errors = require('../../service/errors');
 const { client } = require('./conn');
 const { column } = require('./tables');
 
@@ -35,7 +36,22 @@ async function save_users(users) {
         ]);
 }
 
+/**
+ * 
+ * @param {Number} id 
+ * @returns {Object} `user`
+ */
+async function get_user_by_id(id){
+    let res = await client.conn.promise().query(`SELECT * FROM ${table_name} WHERE ${columns[0].name}=? LIMIT 1`, [id])
+    if (res[0].length==0){
+        return Promise.reject(errors.UserNorExist);
+    }else{
+        return Promise.resolve(res[0][0]);
+    }
+}
+
 module.exports = {
     insert_user_table,
     save_users,
+    get_user_by_id,
 }
