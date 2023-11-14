@@ -1,3 +1,4 @@
+const errors = require('../../service/errors');
 const { positions } = require('../../service/generator');
 const { client } = require('./conn');
 const { column } = require('./tables');
@@ -22,7 +23,16 @@ async function mockup() {
     return client.conn.promise().query(`INSERT INTO ${table_name} (id, name) VALUES ? ON DUPLICATE KEY UPDATE name=VALUES(name)`, [positions]);
 }
 
+async function get_positions(){
+    let res = await client.conn.promise().query(`SELECT * FROM ${table_name}`);
+    if (res[0].length==0) {
+        return Promise.reject(errors.PositionsNotFound);
+    }
+    return Promise.resolve(res[0]);
+}
+
 module.exports = {
     insert_positions_table,
     mockup,
+    get_positions,
 }

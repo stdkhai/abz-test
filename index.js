@@ -8,6 +8,7 @@ const usersRouter = require('./routes/user-router');
 const Response = require('./models/web/response');
 const mid = require('./middleware/base');
 const errors = require('./service/errors');
+const positionsRouter = require('./routes/positions-router');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -26,6 +27,7 @@ useBodyParser(app);
 // routers
 //
 app.use('/users',usersRouter)
+app.use('/positions', positionsRouter)
 
 app.get('/', (req, res) => {
     res.render('main');
