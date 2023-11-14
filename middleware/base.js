@@ -51,6 +51,10 @@ function is_number(v_name) {
     }
 }
 
+function new_user_validation(req, res, next) {
+    
+};
+
 module.exports = {
     response_base,
     token_required,

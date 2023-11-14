@@ -36,6 +36,12 @@ async function save_users(users) {
         ]);
 }
 
+async function save_user_get_id(user){
+    let res = await client.conn.promise().query(`INSERT INTO ${table_name} (${columns.filter(e => e.name != 'id').map(e => e.name).join(', ')}) VALUES ?; SELECT LAST_INSERT_ID() as id;`,
+        [user.name, user.email, user.phone, user.position_id, user.registration_timestamp, user.photo]);
+    return res[0]['id'];
+}
+
 /**
  * 
  * @param {Number} id 
@@ -54,4 +60,5 @@ module.exports = {
     insert_user_table,
     save_users,
     get_user_by_id,
+    save_user_get_id,
 }
