@@ -32,8 +32,14 @@ async function get_token(token) {
     return res[0][0];
 }
 
+async function get_all_tokens(){
+    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM api_tokens`);
+    return res[0];
+}
+
 module.exports = {
     insert_token_table,
     save_token,
     get_token,
+    get_all_tokens,
 }

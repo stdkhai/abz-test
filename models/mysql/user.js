@@ -2,6 +2,18 @@ const errors = require('../../service/errors');
 const { client } = require('./conn');
 const { column } = require('./tables');
 
+
+class User{
+    constructor(name, email, phone, position_id, photo){
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.position_id = position_id
+        this.photo = photo;
+        this.registration_timestamp = new Date().toISOString();
+    }
+}
+
 //PK always first
 const columns = [
     new column('id', 'int', 10, undefined, true, true),
@@ -37,8 +49,10 @@ async function save_users(users) {
 }
 
 async function save_user_get_id(user){
-    let res = await client.conn.promise().query(`INSERT INTO ${table_name} (${columns.filter(e => e.name != 'id').map(e => e.name).join(', ')}) VALUES ?; SELECT LAST_INSERT_ID() as id;`,
-        [user.name, user.email, user.phone, user.position_id, user.registration_timestamp, user.photo]);
+    console.log(user);
+    await client.conn.promise().query(`INSERT INTO ${table_name} (${columns.filter(e => e.name != 'id').map(e => e.name).join(', ')}) VALUES (?)`,
+        [[user.name, user.email, user.phone, user.position_id, user.registration_timestamp, user.photo]]);
+    let res = await client.conn.promise().query('SELECT LAST_INSERT_ID() as id;')
     return res[0]['id'];
 }
 
@@ -61,4 +75,5 @@ module.exports = {
     save_users,
     get_user_by_id,
     save_user_get_id,
+    User,
 }

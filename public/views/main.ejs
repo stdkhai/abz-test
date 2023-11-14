@@ -1,11 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rest API</title>
 </head>
+
 <body>
     Welcome to ABZ test task!
+    <h1>Form with Tokens</h1>
+    <label for="token">Select Token:</label>
+    <select id="token" name="token" <% if (tokens.length === 0) { %>disabled<% } %>>
+        <% if (tokens.length > 0) { %>
+          <% tokens.forEach(token => { %>
+            <option value="<%= token.token %>" <% if (token.token === selectedToken) { %>selected<% } %>><%= token.token %></option>
+          <% }); %>
+        <% } else { %>
+          <option value="" disabled>No tokens available</option>
+        <% } %>
+      </select>
+
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="position_id">Position ID:</label>
+        <input type="text" id="position_id" name="position_id" required>
+
+        <label for="photo">Photo:</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+
+        
+        <button type="submit">Submit</button>
+
+    </form>
+    <button id="newToken">Add Token</button>
+
+    <h2>Tokens:</h2>
+    <ul id="tokenList">
+        <% if (tokens.length > 0) { %>
+          <% tokens.forEach(token => { %>
+            <li><%= token.token %></li>
+          <% }); %>
+        <% } else { %>
+          <li>No tokens available</li>
+        <% } %>
+      </ul>
+    
 </body>
+
 </html>
+
+<script>
+    const form = document.querySelector('form');
+    const addToken = document.getElementById('newToken');
+
+    addToken.addEventListener('click', function () {
+      fetch('/token')
+        .then(response => response.json())
+        .then(data => {
+          const newToken = data.token;
+
+          // Append the new token to the dropdown and the token list
+          const tokenSelect = document.getElementById('token');
+          const tokenList = document.getElementById('tokenList');
+
+          const option = document.createElement('option');
+          option.value = newToken;
+          option.text = newToken;
+          tokenSelect.add(option);
+
+          const listItem = document.createElement('li');
+          listItem.textContent = newToken;
+          tokenList.appendChild(listItem);
+        })
+        .catch(error => {
+          console.error('Error adding token:', error);
+        });
+    });
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const selectedToken = document.getElementById('token').value;
+        console.log(selectedToken);
+
+        fetch('/users', {
+            method: 'POST',
+            headers: {
+                'token': selectedToken,
+            },
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Form submission successful:', data);
+                // Handle success, if needed
+            })
+            .catch(error => {
+                console.error('Error during form submission:', error);
+                // Handle error, if needed
+            });
+    });
+</script>

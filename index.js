@@ -9,6 +9,7 @@ const Response = require('./models/web/response');
 const mid = require('./middleware/base');
 const errors = require('./service/errors');
 const positionsRouter = require('./routes/positions-router');
+const { get_all_tokens } = require('./models/mysql/token');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -29,8 +30,10 @@ useBodyParser(app);
 app.use('/users',usersRouter)
 app.use('/positions', positionsRouter)
 
-app.get('/', (req, res) => {
-    res.render('main');
+app.get('/', async(req, res) => {
+    let tokens = await get_all_tokens();
+    console.log(tokens);
+    res.render('main', {tokens, selectedToken: tokens.length!=0?tokens[0].token:""});
 })
 
 app.get('/token', mid.response_base, (req, res) => {
