@@ -10,6 +10,7 @@ const sizeOf = require('image-size')
  */
 async function name_validation(name) {
     if (!name) {
+        console.log('empty name');
         return Promise.reject(errors.FieldIsRequired('name'));
     }
     switch (true) {
@@ -77,8 +78,7 @@ async function photo_validation(photo){
     if (photo.length > 5*1024*1024) {
         return Promise.reject(errors.FileSoBig);
     }
-    const dimensions = sizeOf.imageSize(photo);  
-    console.log(dimensions);  
+    const dimensions = sizeOf(photo);  
     if (!aviableFormats.includes(dimensions.type)) {
         return Promise.reject(errors.InvalidFile);
     }

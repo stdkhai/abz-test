@@ -28,34 +28,32 @@ usersRouter.get('/:user_id', mid.response_base, mid.is_number('user_id'), (req, 
 });
 
 
-usersRouter.post('/',upload.fields([{name: 'photo', maxCount: 1}]), mid.response_base, mid.token_required, async (req, res) => {
+usersRouter.post('/', upload.fields([{ name: 'photo', maxCount: 1 }]), mid.response_base, mid.token_required, async (req, res) => {
     const { name, email, phone, position_id } = req.body;
-    const photo = req.files.photo;
+    const photo = req.files.photo && req.files.photo.length!=0?req.files.photo[0]:undefined;
     const validationPromises = [
         { field: 'name', promise: validator.name_validation(name) },
         { field: 'email', promise: validator.email_validation(email) },
         { field: 'phone', promise: validator.phone_validation(phone) },
         { field: 'position_id', promise: validator.position_validation(position_id) },
-        { field: 'photo', promise: validator.photo_validation(photo) },
+        { field: 'photo', promise: validator.photo_validation(photo.buffer) },
     ];
-    const validationResults = await Promise.allSettled(
-        validationPromises.map(({ promise, field }) => promise.then(
-            () => ({ field, status: 'fulfilled' }),
-            reason => ({ field, status: 'rejected', reason })
-        ))
-    );
-
-    let rejected = validationResults
-        .filter(result => result.status === 'rejected')
-    if (rejected.length == 0) {
+    let rejectedMap = {};
+    for (const item of validationPromises) {
+        try {
+            await item.promise;
+        } catch (reason) {
+            rejectedMap[item.field] = reason;
+        }
+    }
+    if (rejectedMap.length == 0) {
         let inserted_id = await save_user_get_id(new User(name, email, phone, position_id, photo));
         res.locals.body.add_result('user_id', inserted_id);
     } else {
         res.locals.body.add_message(errors.ValidationFailed)
-        rejected.forEach(result => {
-            const { field, reason } = result;
-            res.locals.body.add_fails(field, reason)
-        });
+        for (const key in rejectedMap) {
+            res.locals.body.add_fails(key, [rejectedMap[key]]);
+        }
         res.status(422)
     }
     res.json(res.locals.body);

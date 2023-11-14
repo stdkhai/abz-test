@@ -17,25 +17,25 @@
             <option value="<%= token.token %>" <% if (token.token === selectedToken) { %>selected<% } %>><%= token.token %></option>
           <% }); %>
         <% } else { %>
-          <option value="" disabled>No tokens available</option>
+          <option value="">No tokens available</option>
         <% } %>
       </select>
 
     <form>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name">
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email">
 
         <label for="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" required>
+        <input type="tel" id="phone" name="phone">
 
         <label for="position_id">Position ID:</label>
-        <input type="text" id="position_id" name="position_id" required>
+        <input type="text" id="position_id" name="position_id">
 
         <label for="photo">Photo:</label>
-        <input type="file" id="photo" name="photo" accept="image/*" required>
+        <input type="file" id="photo" name="photo" accept="image/*">
 
         
         <button type="submit">Submit</button>

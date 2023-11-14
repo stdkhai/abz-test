@@ -18,7 +18,6 @@ function generate_token() {
  * @returns {boolean} 
  */
 function validate_token(token) {
-    console.log(token);
     try {
         jwt.verify(token, env.secret);
     } catch (error) {

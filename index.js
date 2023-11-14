@@ -32,7 +32,6 @@ app.use('/positions', positionsRouter)
 
 app.get('/', async(req, res) => {
     let tokens = await get_all_tokens();
-    console.log(tokens);
     res.render('main', {tokens, selectedToken: tokens.length!=0?tokens[0].token:""});
 })
 
