@@ -6,6 +6,8 @@ class ErrorBase extends Error {
     UserIdNotInteger = 'The user_id must be an integer.';
 
     UserNorExist = 'The user with the requested identifier does not exist.'
+
+    PageNotFound = 'Page not found'
 };
 
 

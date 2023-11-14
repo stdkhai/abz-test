@@ -7,6 +7,7 @@ const { generate_token } = require('./service/token');
 const usersRouter = require('./routes/user-router');
 const Response = require('./models/web/response');
 const mid = require('./middleware/base');
+const errors = require('./service/errors');
 
 const env = process.env;
 const HOST = env.host || "localhost"
@@ -36,6 +37,12 @@ app.get('/token', mid.response_base, (req, res) => {
     } catch (err) {
         res.locals.body.add_message(err)
     }
+    res.json(res.locals.body);
+});
+
+app.use(mid.response_base, (req,res)=>{
+    res.locals.body.add_message(errors.PageNotFound);
+    res.status(404);
     res.json(res.locals.body);
 });
 
