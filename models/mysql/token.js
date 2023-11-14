@@ -6,12 +6,14 @@ const columns = [
     new column('token', 'varchar', 255, undefined, true, false),
 ];
 
+const table_name = 'api_tokens';
+
 const insert_token_table = () => {
     let col_str = [];
     columns.forEach(col => {
         col_str.push(col.string());
     });
-    return client.conn.promise().execute(`CREATE TABLE IF NOT EXISTS \`api_tokens\` (${col_str.join(', ')}, PRIMARY KEY (\`${columns[0].name}\`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci`)
+    return client.conn.promise().execute(`CREATE TABLE IF NOT EXISTS \`${table_name}\` (${col_str.join(', ')}, PRIMARY KEY (\`${columns[0].name}\`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci`)
 };
 
 /**
@@ -20,7 +22,7 @@ const insert_token_table = () => {
  * @returns 
  */
 async function save_token(token) {
-    return client.conn.promise().execute(`INSERT INTO api_tokens VALUES(?)`,[token]);
+    return client.conn.promise().execute(`INSERT INTO ${table_name} VALUES(?)`,[token]);
 }
 /**
  * 
@@ -28,12 +30,16 @@ async function save_token(token) {
  * @returns 
  */
 async function get_token(token) {
-    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM api_tokens WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
+    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
     return res[0][0];
 }
 
+async function delete_token(token) {
+    return client.conn.promise().query(`DELETE FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
+}
+
 async function get_all_tokens(){
-    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM api_tokens`);
+    let res = await client.conn.promise().query(`SELECT ${columns[0].name} FROM ${table_name}`);
     return res[0];
 }
 
@@ -42,4 +48,5 @@ module.exports = {
     save_token,
     get_token,
     get_all_tokens,
+    delete_token,
 }

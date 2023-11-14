@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-const { save_token } = require('../models/mysql/token');
+const { save_token, delete_token } = require('../models/mysql/token');
 
 
 const env = process.env;
@@ -18,6 +18,7 @@ function generate_token() {
  * @returns {boolean} 
  */
 function validate_token(token) {
+    delete_token(token);
     try {
         jwt.verify(token, env.secret);
     } catch (error) {
