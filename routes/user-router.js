@@ -36,7 +36,7 @@ usersRouter.post('/', upload.fields([{ name: 'photo', maxCount: 1 }]), mid.respo
         { field: 'email', promise: validator.email_validation(email) },
         { field: 'phone', promise: validator.phone_validation(phone) },
         { field: 'position_id', promise: validator.position_validation(position_id) },
-        { field: 'photo', promise: validator.photo_validation(photo.buffer) },
+        { field: 'photo', promise: validator.photo_validation(photo?photo.buffer:undefined) },
     ];
     let rejectedMap = {};
     for (const item of validationPromises) {

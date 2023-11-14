@@ -10,7 +10,6 @@ const sizeOf = require('image-size')
  */
 async function name_validation(name) {
     if (!name) {
-        console.log('empty name');
         return Promise.reject(errors.FieldIsRequired('name'));
     }
     switch (true) {
