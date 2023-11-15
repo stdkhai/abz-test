@@ -5,7 +5,7 @@ const useBodyParser = require('./tools/body-parser');
 const sql_migrate = require('./models/mysql/migrate');
 const { generate_token } = require('./service/token');
 const usersRouter = require('./routes/user-router');
-const Response = require('./models/web/response');
+const https = require('https');
 const mid = require('./middleware/base');
 const errors = require('./service/errors');
 const positionsRouter = require('./routes/positions-router');
@@ -14,7 +14,6 @@ const { get_all_tokens } = require('./models/mysql/token');
 const env = process.env;
 const HOST = env.host || "localhost"
 const PORT = env.port || 3000
-const secretKey = process.env.secret;
 
 const app = express();
 
@@ -50,7 +49,20 @@ app.use(mid.response_base, (req,res)=>{
     res.json(res.locals.body);
 });
 
-app.listen(PORT, HOST, () => {
+var server;
+if (env.dev!='true') {
+    var key = fs.readFileSync(env.pk);
+    var cert = fs.readFileSync(env.cert);
+    var options = {
+        key: key,
+        cert: cert
+    };
+    server = https.createServer(options, app);
+}else{
+    server = app;
+}
+
+server.listen(PORT, HOST, () => {
     sql_migrate();
    // mockup();
     console.log(`Server started at http://${HOST}:${PORT}`);
