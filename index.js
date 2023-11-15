@@ -11,10 +11,9 @@ const mid = require('./middleware/base');
 const errors = require('./service/errors');
 const positionsRouter = require('./routes/positions-router');
 const { get_all_tokens } = require('./models/mysql/token');
-const proxy = require("node-global-proxy").default;
 
-proxy.setConfig({});
-proxy.stop();
+
+
 const env = process.env;
 const HOST = env.host || "localhost"
 const PORT = env.port || 3000
