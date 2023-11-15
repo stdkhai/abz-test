@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+    <a href="/">MAIN</a>
   <h1>User List</h1>
 
   <div id="userList"></div>
@@ -16,7 +17,10 @@
     <button id="prevBtn" disabled>Previous Page</button>
     <button id="nextBtn" disabled>Next Page</button>
   </div>
+  <h2>Response viewer</h2>
+  <code id="response" style="white-space: pre-wrap;">
 
+  </code>
   <script>
     const userListContainer = document.getElementById('userList');
     const loadUsersBtn = document.getElementById('loadUsersBtn');
@@ -51,8 +55,10 @@
         nextBtn.disabled = data.links.next_link===null;
         nextLink = data.links.next_link;
         prevLink = data.links.prev_link;
+        res_log(data)
       } catch (error) {
         console.error('Error fetching users:', error);
+        res_log(error);
       }
     }
 
@@ -69,6 +75,15 @@
     nextBtn.addEventListener('click', () => {
       fetchAndRenderUsers(nextLink);
     });
+
+    function res_log(response) {
+        try {
+            response = JSON.stringify(response, null, '\t' );
+        } catch (_) {
+            
+        }
+        document.getElementById('response').innerHTML = response;
+    }
   </script>
 </body>
 </html>

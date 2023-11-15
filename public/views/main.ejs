@@ -9,6 +9,7 @@
 
 <body>
     Welcome to ABZ test task!
+    <a href="/users/render">USER PAGINATOR LINK</a>
     <h1>Form with Tokens</h1>
     <label for="token">Select Token:</label>
     <select id="token" name="token" <% if (tokens.length === 0) { %>disabled<% } %>>
@@ -53,7 +54,10 @@
           <li>No tokens available</li>
         <% } %>
       </ul>
-    
+    <h2>Response viewer</h2>
+    <code id="response" style="white-space: pre-wrap;">
+
+    </code>
 </body>
 
 </html>
@@ -80,6 +84,7 @@
           const listItem = document.createElement('li');
           listItem.textContent = newToken;
           tokenList.appendChild(listItem);
+          res_log(data)
         })
         .catch(error => {
           console.error('Error adding token:', error);
@@ -102,9 +107,20 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Form submission successful:', data);
+                res_log(data);
             })
             .catch(error => {
                 console.error('Error during form submission:', error);
+                res_log(error);
             });
     });
+
+    function res_log(response) {
+        try {
+            response = JSON.stringify(response, null, '\t' );
+        } catch (_) {
+            
+        }
+        document.getElementById('response').innerHTML = response;
+    }
 </script>
