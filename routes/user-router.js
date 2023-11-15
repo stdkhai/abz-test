@@ -45,11 +45,9 @@ usersRouter.post('/', upload.fields([{ name: 'photo', maxCount: 1 }]), mid.respo
         try {
             await item.promise;
         } catch (reason) {
-            console.log(reason);
             rejectedMap[item.field] = reason;
         }
     }
-    console.log(rejectedMap);
     if (Object.keys(rejectedMap).length == 0) {
         let id = await tinify_image(photo.buffer)
         let inserted_id = await save_user_get_id(new User(name, email, phone, position_id, id));

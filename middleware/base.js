@@ -39,10 +39,12 @@ function token_required(req, res, next) {
             res.json(res.locals.body);
             return
         }
-        next();
+        next()
     })
     .catch(err=>{
         console.log(err);
+        res.json(res.locals.body);
+        return
     })
 
 }

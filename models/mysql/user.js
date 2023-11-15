@@ -49,11 +49,10 @@ async function save_users(users) {
 }
 
 async function save_user_get_id(user){
-    console.log(user);
     await client.conn.promise().query(`INSERT INTO ${table_name} (${columns.filter(e => e.name != 'id').map(e => e.name).join(', ')}) VALUES (?)`,
         [[user.name, user.email, user.phone, user.position_id, user.registration_timestamp, user.photo]]);
     let res = await client.conn.promise().query('SELECT LAST_INSERT_ID() as id;')
-    return res[0]['id'];
+    return res[0][0]['id'];
 }
 
 /**

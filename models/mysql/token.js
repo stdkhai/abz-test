@@ -30,12 +30,12 @@ async function save_token(token) {
  * @returns 
  */
 async function get_token(token) {
-    let res = await client.conn.promise().query(`SELECT COUNT(${columns[0].name}) FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
-    return res[0][0];
+    let res = await client.conn.promise().query(`SELECT COUNT(${columns[0].name}) as count FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
+    return res[0][0]['count'];
 }
 
 async function delete_token(token) {
-    return client.conn.promise().query(`DELETE FROM ${table_name} WHERE ${columns[0].name} = ? LIMIT 1`, [token]);
+    return client.conn.promise().query(`DELETE FROM ${table_name} WHERE ${columns[0].name} = ?`, [token]);
 }
 
 async function get_all_tokens(){
