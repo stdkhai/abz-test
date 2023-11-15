@@ -84,15 +84,15 @@ usersRouter.get('/', mid.response_base, mid.pagination_validator, async (req, re
         total_count = users[0].total_count;
         users = users.map(user => {
             delete user.total_count;
-            user.photo = validator.isValidUrl(user.photo)? user.photo : `${req.protocol}://${req.get('host')}${user.photo}`
+            user.photo = validator.isValidUrl(user.photo)? user.photo : `${req.protocol}://${req.hostname}${user.photo}`
         });
     }
     const nextLink = users.length === count
-        ? `${req.protocol}://${req.get('host')}/users?offset=${startIdx + count}&count=${count}`
+        ? `${req.protocol}://${req.hostname}/users?offset=${startIdx + count}&count=${count}`
         : null;
 
     const prevLink = startIdx > 0
-        ? `${req.protocol}://${req.get('host')}/users?offset=${Math.max(0, startIdx - count)}&count=${count}`
+        ? `${req.protocol}://${req.hostname}/users?offset=${Math.max(0, startIdx - count)}&count=${count}`
         : null;
     res.locals.body.add_result('links', {
         prev_link: prevLink,
