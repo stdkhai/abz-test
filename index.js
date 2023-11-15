@@ -11,6 +11,13 @@ const mid = require('./middleware/base');
 const errors = require('./service/errors');
 const positionsRouter = require('./routes/positions-router');
 const { get_all_tokens } = require('./models/mysql/token');
+const proxy = require("node-global-proxy").default;
+
+proxy.setConfig({
+    http: "http://80.64.218.82/abz",
+    https: "https://80.64.218.82/abz",
+  });
+  proxy.start();
 
 const env = process.env;
 const HOST = env.host || "localhost"
