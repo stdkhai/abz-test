@@ -78,6 +78,9 @@ function is_number(v_name, isQuery) {
 function pagination_validator(req, res, next) {
     const { page, offset, count } = req.query;
     let varStorage = [];
+    if (!page && !offset){
+        res.locals.body.add_fails('error', ["The field 'page' or 'offser' is required"])
+    }
     page ? varStorage.push({ name: 'page', value: Number(page) }) : "";
     offset ? varStorage.push({ name: 'offset', value: Number(offset) }) : "";
     count ? varStorage.push({ name: 'count', value: Number(count) }) : varStorage.push({ name: 'count', value: 5 });

@@ -14,6 +14,10 @@ const usersRouter = express.Router();
 
 useBodyParser(usersRouter);
 
+usersRouter.get('/render', (req, res) => {
+    res.render('users')
+})
+
 usersRouter.get('/:user_id', mid.response_base, mid.is_number('user_id'), (req, res) => {
     get_user_by_id(req.params.user_id)
         .then(user => {

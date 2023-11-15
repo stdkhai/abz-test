@@ -91,7 +91,6 @@
 
         const formData = new FormData(form);
         const selectedToken = document.getElementById('token').value;
-        console.log(selectedToken);
 
         fetch('/users', {
             method: 'POST',
@@ -103,11 +102,9 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Form submission successful:', data);
-                // Handle success, if needed
             })
             .catch(error => {
                 console.error('Error during form submission:', error);
-                // Handle error, if needed
             });
     });
 </script>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>User List</h1>
+
+  <div id="userList"></div>
+
+  <div id="pagination">
+    <button id="loadUsersBtn">Load Users</button>
+    <button id="prevBtn" disabled>Previous Page</button>
+    <button id="nextBtn" disabled>Next Page</button>
+  </div>
+
+  <script>
+    const userListContainer = document.getElementById('userList');
+    const loadUsersBtn = document.getElementById('loadUsersBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let nextLink, prevLink;
+
+    // Function to fetch and render paginated user data
+    async function fetchAndRenderUsers(link) {
+      try {
+        const response = await fetch(link);
+        const data = await response.json();
+
+        // Render the paginated user data
+        userListContainer.innerHTML = '';
+        if (data.users && data.users.length > 0) {
+          const userList = document.createElement('ul');
+          data.users.forEach(user => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<code> ${JSON.stringify(user)}</code>`;
+            userList.appendChild(listItem);
+          });
+          userListContainer.appendChild(userList);
+        } else {
+          userListContainer.innerHTML = '<p>No users found.</p>';
+        }
+
+        // Update the pagination buttons
+        console.log(data.links);
+        prevBtn.disabled = data.links.prev_link===null;
+        nextBtn.disabled = data.links.next_link===null;
+        nextLink = data.links.next_link;
+        prevLink = data.links.prev_link;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
+
+    // Event listener for "Load Users" button
+    loadUsersBtn.addEventListener('click', () => {
+      fetchAndRenderUsers(`/users?offset=0`);
+    });
+
+    // Event listeners for pagination buttons
+    prevBtn.addEventListener('click', () => {
+      fetchAndRenderUsers(prevLink);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      fetchAndRenderUsers(nextLink);
+    });
+  </script>
+</body>
+</html>
