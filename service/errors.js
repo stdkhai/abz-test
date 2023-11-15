@@ -10,6 +10,7 @@ class ErrorBase extends Error {
     // DB errors
     UserNorExist = 'The user with the requested identifier does not exist.'
     PositionsNotFound = 'Positions not found.'
+    RecordsNotFound = 'Records not found.'
 
     // response errors
     PageNotFound = 'Page not found';
@@ -49,6 +50,14 @@ class ErrorBase extends Error {
 
     FieldIsRequired(name){
         return `Field ${name} is required.`
+    }
+
+    SoBigValue(max, v_name){
+        return `The ${v_name} must be not greater than ${max}`
+    }
+
+    SoSmallValue(min, v_name){
+        return `The ${v_name} must be at least ${min}`
     }
 };
 

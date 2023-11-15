@@ -69,10 +69,22 @@ async function get_user_by_id(id){
     }
 }
 
+async function get_users_pag(startIdx, count){
+    let [res] = await client.conn.promise().query(`
+    SELECT users.*, api_positions.name as position ,
+    COUNT(*) OVER() as total_count
+    FROM ${table_name} as users
+    LEFT JOIN api_positions ON users.position_id = api_positions.id
+    ORDER BY users.registration_timestamp DESC LIMIT ?, ? `,
+    [startIdx, count])
+    return res
+}
+
 module.exports = {
     insert_user_table,
     save_users,
     get_user_by_id,
     save_user_get_id,
     User,
+    get_users_pag,
 }
