@@ -6,6 +6,7 @@ const sql_migrate = require('./models/mysql/migrate');
 const { generate_token } = require('./service/token');
 const usersRouter = require('./routes/user-router');
 const https = require('https');
+const fs = require('fs');
 const mid = require('./middleware/base');
 const errors = require('./service/errors');
 const positionsRouter = require('./routes/positions-router');
