@@ -13,12 +13,8 @@ const positionsRouter = require('./routes/positions-router');
 const { get_all_tokens } = require('./models/mysql/token');
 const proxy = require("node-global-proxy").default;
 
-proxy.setConfig({
-    http: "http://80.64.218.82/abz",
-    https: "https://80.64.218.82/abz",
-  });
-  proxy.start();
-
+proxy.setConfig({});
+proxy.stop();
 const env = process.env;
 const HOST = env.host || "localhost"
 const PORT = env.port || 3000
